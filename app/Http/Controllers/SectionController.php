@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\sections;
+use App\Models\section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class SectionsController extends Controller
+class SectionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $sections = sections::all();
+        $sections = Section::all();
         return view('sections.index', compact('sections'));
     }
 
@@ -45,7 +45,7 @@ class SectionsController extends Controller
         );
 
         try {
-            sections::create([
+            section::create([
                 'section_name' => $request->section_name,
                 'section_description' => $request->section_description ?: 'لا يوجد',
                 'created_by' => Auth::user()->name,
@@ -61,7 +61,7 @@ class SectionsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(sections $sections)
+    public function show(section $sections)
     {
         //
     }
@@ -69,7 +69,7 @@ class SectionsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(sections $sections)
+    public function edit(section $sections)
     {
         //
     }
@@ -77,7 +77,7 @@ class SectionsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, sections $section)
+    public function update(Request $request, Section $section)
     {
         $request->validate([
             'section_name' => 'required|max:255',
@@ -96,7 +96,7 @@ class SectionsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(sections $section)
+    public function destroy(Section $section)
     {
         $section->delete();
 
