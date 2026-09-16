@@ -271,7 +271,7 @@
 					</svg><span class="side-menu__label">الإعدادات</span><i class="angle fe fe-chevron-down"></i></a>
 				<ul class="slide-menu">
 					<li><a class="slide-item" href="{{ url('/' . $page = 'sections') }}">الأقسام </a></li>
-					<li><a class="slide-item" href="{{ url('/' . $page = 'editprofile') }}">إضافة منتج</a></li>
+					<li><a class="slide-item" href="{{ url('/' . $page = 'products') }}"> المنتجات</a></li>
 					{{-- <li><a class="slide-item" href="{{ url('/' . $page = 'invoice') }}">Invoice</a></li>
 					<li><a class="slide-item" href="{{ url('/' . $page = 'pricing') }}">Pricing</a></li>
 					<li><a class="slide-item" href="{{ url('/' . $page = 'gallery') }}">Gallery</a></li>
