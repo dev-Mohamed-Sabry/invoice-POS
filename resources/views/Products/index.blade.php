@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'الأقسام')
+@section('title', 'المنتجات')
 
 @section('css')
     <!-- Internal Data table css -->
@@ -69,7 +69,7 @@
 
                     <div class="col-sm-4 col-md-1">
                         <div class="d-flex justify-content-between">
-                            <a class="modal-effect btn btn-outline-primary btn-block font-weight-bold add-section"
+                            <a class="modal-effect btn btn-outline-primary btn-block font-weight-bold add-product"
                                 data-effect="effect-scale" data-toggle="modal" href="#modaldemo8">إضافة منتج</a>
                         </div>
                     </div>
@@ -87,47 +87,48 @@
                             </thead>
 
                             <tbody>
-                                {{-- @forelse ($products as $product) --}}
-                                {{-- <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $section->section_name }}</td>
-                                    <td>{{ $section->section_description }}</td>
-                                    <td>
-                                        <div class="d-flex justify-content-center align-items-center">
+                                @forelse ($products as $product)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $product->product_name }}</td>
+                                        <td>{{ $product->product_description }}</td>
+                                        <td>
+                                            <div class="d-flex justify-content-center align-items-center">
 
-                                            {{-- Edit --}}
-                                            {{-- <a href="#" class="text-primary mx-2 edit-section" title="تعديل"
-                                                data-id="{{ $section->id }}" data-name="{{ $section->section_name }}"
-                                                data-description="{{ $section->section_description }}" data-toggle="modal"
-                                                data-target="#modaldemo8">
+                                                {{-- Edit --}}
+                                                <a href="#" class="text-primary mx-2 edit-product" title="تعديل"
+                                                    data-id="{{ $product->id }}" data-name="{{ $product->product_name }}"
+                                                    data-product_description="{{ $product->product_description }}"
+                                                    data-section_id="{{ $product->section_id }}" data-toggle="modal"
+                                                    data-target="#modaldemo8">
 
-                                                <i class="fas fa-edit fa-lg"></i>
-                                            </a> --}}
+                                                    <i class="fas fa-edit fa-lg"></i>
+                                                </a>
 
-                                            {{-- Delete --}}
-                                            {{-- <form action="{{ route('sections.destroy', $section) }}" method="POST"
-                                                class="d-inline-block m-0">
-                                                @csrf
-                                                @method('DELETE')
+                                                {{-- Delete --}}
+                                                <form action="{{ route('products.destroy', $product) }}" method="POST"
+                                                    class="d-inline-block m-0">
+                                                    @csrf
+                                                    @method('DELETE')
 
-                                                <button type="submit"
-                                                    class="btn p-0 border-0 bg-transparent text-danger mx-2" title="حذف"
-                                                    onclick="return confirm('هل أنت متأكد من حذف القسم؟')">
-                                                    <i class="fas fa-trash-alt fa-lg"></i>
-                                                </button>
-                                            </form> --}}
+                                                    <button type="submit"
+                                                        class="btn p-0 border-0 bg-transparent text-danger mx-2" title="حذف"
+                                                        onclick="return confirm('هل أنت متأكد من حذف المنتج؟')">
+                                                        <i class="fas fa-trash-alt fa-lg"></i>
+                                                    </button>
+                                                </form>
 
-                                        </div>
-                                    </td>
-                                    {{--
-                                </tr> --}}
-                                {{-- @empty --}}
-                                {{-- <tr>
-                                    <td colspan="4" class="text-bold bg-danger h5">
-                                        لا توجد أقسام حاليا
-                                    </td>
-                                </tr>
-                                @endforelse --}}
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-bold bg-danger h5">
+                                            لا توجد منتجات حاليا
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
 
 
@@ -145,7 +146,7 @@
                 <div class="modal-content modal-content-demo">
 
                     <div class="modal-header">
-                        <h6 class="modal-title" id="sectionModalTitle"></h6>
+                        <h6 class="modal-title" id="productModalTitle"></h6>
 
                         <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                             <span aria-hidden="true">&times;</span>
@@ -153,22 +154,40 @@
                     </div>
 
                     <div class="modal-body">
-                        <form id="sectionForm" action="{{ route('products.store') }}" method="POST" autocomplete="off">
+                        <form id="productForm" action="{{ route('products.store') }}" method="POST" autocomplete="off">
                             @csrf
+
                             <div class="form-group">
-                                <label for="section_name">إسم المنتج</label>
-                                <input type="text" class="form-control" id="section_name" name="section_name" required
+                                <label for="product_name">إسم المنتج</label>
+                                <input type="text" class="form-control" id="product_name" name="product_name" required
                                     placeholder="إدخل إسم المنتج">
                             </div>
 
                             <div class="form-group">
-                                <label for="section_description">ملاحظات</label>
-                                <textarea class="form-control" id="section_description" name="section_description" rows="4"
+                                <label for="section_id">القسم</label>
+
+                                <select class="form-control" id="section_id" name="section_id" required>
+                                    <option value="">-- اختر القسم --</option>
+
+                                    @foreach ($sections as $section)
+                                        <option value="{{ $section->id }}">
+                                            {{ $section->section_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="product_description">ملاحظات</label>
+                                <textarea class="form-control" id="product_description" name="product_description" rows="4"
                                     placeholder="إدخل الملاحظات"></textarea>
                             </div>
+
                             <div class="modal-footer">
-                                <button id="sectionSubmit" class="btn ripple btn-success" type="submit"></button>
-                                <button class="btn ripple btn-secondary" data-dismiss="modal" type="button">إغلاق</button>
+                                <button id="productSubmit" class="btn ripple btn-success" type="submit"></button>
+                                <button class="btn ripple btn-secondary" data-dismiss="modal" type="button">
+                                    إغلاق
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -219,44 +238,47 @@
     {{-- تعديل بيانات الفورم حسب الأكشن --}}
     <script>
         // إضافة منتج جديد
-        $('.add-section').click(function () {
+        $('.add-product').click(function () {
 
-            $('#sectionModalTitle').text('إضافة منتج');
-            $('#sectionSubmit').text('تأكيد');
-            $('#section_name').val('');
-            $('#section_description').val('');
+            $('#productModalTitle').text('إضافة منتج');
+            $('#productSubmit').text('تأكيد');
+            $('#product_name').val('');
+            $('#product_description').val('');
 
             // Delete Current Method If Existed
-            $('#sectionForm input[name="_method"]').remove();
+            $('#productForm input[name="_method"]').remove();
 
-            $('#sectionForm').attr(
+            $('#productForm').attr(
                 'action',
-                '{{ route('sections.store') }}'
+                '{{ route('products.store') }}'
             );
         });
 
         // تعديل المنتج 
-        $('.edit-section').click(function () {
+        $('.edit-product').click(function () {
 
-            $('#sectionSubmit').text('تعديل');
-            $('#sectionModalTitle').text('تعديل المنتج');
+            $('#productSubmit').text('تعديل');
+            $('#productModalTitle').text('تعديل المنتج');
 
             let id = $(this).data('id');
             let name = $(this).data('name');
-            let description = $(this).data('description');
+            let description = $(this).data('product_description');
+            let section_id = $(this).data('section_id');
 
-            $('#section_name').val(name);
-            $('#section_description').val(description);
+            $('#product_name').val(name);
+            $('#product_description').val(description);
+            $('#section_id').val(section_id);
+
 
             // Delete Current Method If Existed
-            $('#sectionForm input[name="_method"]').remove();
+            $('#productForm input[name="_method"]').remove();
 
-            let updateUrl = "{{ url('sections') }}/" + id;
+            let updateUrl = "{{ url('products') }}/" + id;
 
-            $('#sectionForm').attr('action', updateUrl);
+            $('#productForm').attr('action', updateUrl);
 
             //Laravel لا يرسل PUT مباشرة من الـ form.
-            $('#sectionForm').prepend(
+            $('#productForm').prepend(
                 '<input type="hidden" name="_method" value="PUT">'
             );
         });
