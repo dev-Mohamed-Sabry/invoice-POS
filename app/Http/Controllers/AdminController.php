@@ -11,10 +11,10 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index($page)
     {
-        if (view()->exists($id)) {
-            return view($id);
+        if (view()->exists($page)) {
+            return view($page);
         } else {
             return view('404');
         }
