@@ -86,7 +86,7 @@ class SectionController extends Controller
 
         $section->update([
             'section_name' => $request->section_name,
-            'section_description' => $request->section_description,
+            'section_description' => $request->section_description ?: 'لا يوجد',
         ]);
 
         return redirect()->back()
