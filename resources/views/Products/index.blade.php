@@ -76,11 +76,12 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="example" class="table key-buttons text-nowrap w-100 text-center">
+                        <table id="example1" class="table key-buttons text-nowrap w-100 text-center">
                             <thead>
                                 <tr>
                                     <th class="border-bottom-0">#</th>
                                     <th class="border-bottom-0" style="font-size: 15px;">إسم المنتج</th>
+                                    <th class="border-bottom-0" style="font-size: 15px;">إسم القسم</th>
                                     <th class="border-bottom-0 h5" style="font-size: 15px;"> الوصف</th>
                                     <th class="border-bottom-0 h5" style="font-size: 15px;">العمليات</th>
                                 </tr>
@@ -91,6 +92,7 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $product->product_name }}</td>
+                                        <td>{{ $product->section->section_name }}</td>
                                         <td>{{ $product->product_description }}</td>
                                         <td>
                                             <div class="d-flex justify-content-center align-items-center">
