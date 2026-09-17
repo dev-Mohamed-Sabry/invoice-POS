@@ -98,6 +98,9 @@ class SectionController extends Controller
      */
     public function destroy(Section $section)
     {
+        if ($section->products()->exists()) {
+            return back()->with('error', 'لا يمكن حذف القسم لأنه مرتبط بمنتجات.');
+        }
         $section->delete();
 
         return back()->with('success', 'تم حذف القسم بنجاح');
