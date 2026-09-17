@@ -32,7 +32,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // dd();
+
         $request->validate(
             [
                 'product_name' => ['required', 'unique:products,product_name', 'max:255'],
