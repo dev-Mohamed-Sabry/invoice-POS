@@ -22,9 +22,11 @@ Route::middleware([
     })->name('dashboard');
 
 
-
+    Route::get('invoices/products/{section}', [InvoiceController::class, 'getProductsBySection'])
+        ->name('products.by-section');
     Route::resource('invoices', InvoiceController::class);
-    Route::resource('sections', SectionController::class);
     Route::resource('products', ProductController::class);
+    Route::resource('sections', SectionController::class);
+
     Route::get('/{page}', [AdminController::class, 'index']);
 });

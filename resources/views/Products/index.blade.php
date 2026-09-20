@@ -103,7 +103,6 @@
                                                     data-product_description="{{ $product->product_description }}"
                                                     data-section_id="{{ $product->section_id }}" data-toggle="modal"
                                                     data-target="#modaldemo8">
-
                                                     <i class="fas fa-edit fa-lg"></i>
                                                 </a>
 

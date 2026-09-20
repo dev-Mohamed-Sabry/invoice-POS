@@ -37,8 +37,15 @@
 				<div class="card-header pb-0">
 					<div class="d-flex justify-content-between">
 						<h4 class="card-title mg-b-0">عرض وإدارة الفواتير</h4>
-						<i class="mdi mdi-dots-horizontal text-gray"></i>
 					</div>
+					<div class="col-sm-4 col-md-1">
+						<div class="d-flex justify-content-between mt-3">
+							<a class="modal-effect btn btn-outline-primary btn-block font-weight-bold fas fa-plus"
+								data-effect="effect-scale" href="{{ route('invoices.create') }}">إضافة
+								فاتورة</a>
+						</div>
+					</div>
+					</thead>
 				</div>
 				<div class="card-body">
 					<div class="table-responsive">

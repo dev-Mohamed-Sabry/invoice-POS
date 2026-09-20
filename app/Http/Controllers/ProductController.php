@@ -86,16 +86,17 @@ class ProductController extends Controller
             'product_description' => 'nullable|min:4',
             'section_id' => ['required', 'exists:sections,id'],
         ]);
+        try {
+            $product->update([
+                'product_name' => $request->product_name,
+                'product_description' => $request->product_description ?: 'لا يوجد',
+                'section_id' => $request->section_id,
+            ]);
 
-        $product->update([
-            'product_name' => $request->product_name,
-            'product_description' => $request->product_description ?: 'لا يوجد',
-            'section_id' => $request->section_id,
-
-        ]);
-
-        return redirect()->back()
-            ->with('success', 'تم تعديل المنتج بنجاح');
+            return redirect()->back()->with('success', 'تم تعديل المنتج بنجاح');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'حدث خطأ أثناء تعديل المنتج');
+        }
     }
 
     /**

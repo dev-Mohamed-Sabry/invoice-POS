@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
+use App\Models\Product;
+use App\Models\Section;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
 {
@@ -20,7 +23,9 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        //
+        $sections = Section::all("id", "section_name");
+
+        return view('invoices.create', compact('sections'));
     }
 
     /**
@@ -42,10 +47,7 @@ class InvoiceController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Invoice $invoices)
-    {
-        //
-    }
+    public function edit() {}
 
     /**
      * Update the specified resource in storage.
@@ -61,5 +63,13 @@ class InvoiceController extends Controller
     public function destroy(Invoice $invoices)
     {
         //
+    }
+
+    public function getProductsBySection(Section $section)
+    {
+        $products = $section->products()
+            ->select('id', 'product_name')
+            ->get();
+        return response()->json($products);
     }
 }
