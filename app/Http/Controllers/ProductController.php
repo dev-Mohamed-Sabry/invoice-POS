@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -32,31 +33,60 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-
         $request->validate(
             [
                 'product_name' => ['required', 'unique:products,product_name', 'max:255'],
+                'product_price' => ['required', 'numeric', 'min:0'],
                 'product_description' => ['nullable', 'min:4'],
+                'product_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
                 'section_id' => ['required', 'exists:sections,id'],
             ],
             [
-                'product_name.required' => 'إسم المنتج مطلوب.',
-                'product_name.unique' => 'إسم المنتج موجود بالفعل.',
-                'product_name.max' => 'إسم المنتج يجب ألا يتجاوز 255 حرفًا.',
+                'product_name.required' => 'اسم المنتج مطلوب.',
+                'product_name.unique' => 'اسم المنتج موجود بالفعل.',
+                'product_name.max' => 'اسم المنتج يجب ألا يتجاوز 255 حرفًا.',
+
+                'product_price.required' => 'سعر المنتج مطلوب.',
+                'product_price.numeric' => 'سعر المنتج يجب أن يكون رقمًا.',
+                'product_price.min' => 'سعر المنتج لا يمكن أن يكون أقل من صفر.',
+
                 'product_description.min' => 'الوصف يجب ألا يقل عن 4 أحرف.',
+
+                'product_image.image' => 'الملف المرفق يجب أن يكون صورة.',
+                'product_image.mimes' => 'صورة المنتج يجب أن تكون بصيغة JPG أو JPEG أو PNG أو WEBP.',
+                'product_image.max' => 'حجم صورة المنتج يجب ألا يتجاوز 2 ميجابايت.',
+
+                'section_id.required' => 'يجب اختيار القسم.',
+                'section_id.exists' => 'القسم المحدد غير موجود.',
             ]
         );
 
         try {
+
+            $productImage = null;
+
+            if ($request->hasFile('product_image')) {
+                $productImage = $request->file('product_image')
+                    ->store('products', 'public');
+            }
+
             Product::create([
                 'product_name' => $request->product_name,
+                'product_price' => $request->product_price,
                 'product_description' => $request->product_description ?: 'لا يوجد',
+                'product_image' => $productImage,
                 'section_id' => $request->section_id,
+                'created_by' => Auth::user()->name,
             ]);
 
-            return redirect()->back()->with('success', 'تم إضافة المنتج بنجاح');
+            return redirect()
+                ->back()
+                ->with('success', 'تم إضافة المنتج بنجاح');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ أثناء إضافة المنتج');
+
+            return redirect()
+                ->back()
+                ->with('error', 'حدث خطأ أثناء إضافة المنتج');
         }
     }
 
@@ -79,23 +109,79 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
+
+
     public function update(Request $request, Product $product)
     {
-        $request->validate([
-            'product_name' => 'required|max:255',
-            'product_description' => 'nullable|min:4',
-            'section_id' => ['required', 'exists:sections,id'],
-        ]);
+        $request->validate(
+            [
+                'product_name' => [
+                    'required',
+                    'max:255',
+                    'unique:products,product_name,' . $product->id,
+                ],
+                'product_price' => ['required', 'numeric', 'min:0'],
+                'product_description' => ['nullable', 'min:4'],
+                'product_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+                'section_id' => ['required', 'exists:sections,id'],
+            ],
+            [
+                'product_name.required' => 'اسم المنتج مطلوب.',
+                'product_name.unique' => 'اسم المنتج موجود بالفعل.',
+                'product_name.max' => 'اسم المنتج يجب ألا يتجاوز 255 حرفًا.',
 
-        $product->update([
-            'product_name' => $request->product_name,
-            'product_description' => $request->product_description ?: 'لا يوجد',
-            'section_id' => $request->section_id,
+                'product_price.required' => 'سعر المنتج مطلوب.',
+                'product_price.numeric' => 'سعر المنتج يجب أن يكون رقمًا.',
+                'product_price.min' => 'سعر المنتج لا يمكن أن يكون أقل من صفر.',
 
-        ]);
+                'product_description.min' => 'الوصف يجب ألا يقل عن 4 أحرف.',
 
-        return redirect()->back()
-            ->with('success', 'تم تعديل المنتج بنجاح');
+                'product_image.image' => 'الملف المرفق يجب أن يكون صورة.',
+                'product_image.mimes' => 'صورة المنتج يجب أن تكون بصيغة JPG أو JPEG أو PNG أو WEBP.',
+                'product_image.max' => 'حجم صورة المنتج يجب ألا يتجاوز 2 ميجابايت.',
+
+                'section_id.required' => 'يجب اختيار القسم.',
+                'section_id.exists' => 'القسم المحدد غير موجود.',
+            ]
+        );
+
+        try {
+
+            $data = [
+                'product_name' => $request->product_name,
+                'product_price' => $request->product_price,
+                'product_description' => $request->product_description ?: 'لا يوجد',
+                'section_id' => $request->section_id,
+            ];
+
+            if ($request->hasFile('product_image')) {
+
+                // حفظ مسار الصورة القديمة
+                $oldImage = $product->product_image;
+
+                // رفع الصورة الجديدة
+                $newImage = $request->file('product_image')
+                    ->store('products', 'public');
+
+                $data['product_image'] = $newImage;
+
+                // حذف الصورة القديمة بعد نجاح رفع الجديدة
+                if ($oldImage && Storage::disk('public')->exists($oldImage)) {
+                    Storage::disk('public')->delete($oldImage);
+                }
+            }
+
+            $product->update($data);
+
+            return redirect()
+                ->back()
+                ->with('success', 'تم تعديل المنتج بنجاح');
+        } catch (\Exception $e) {
+
+            return redirect()
+                ->back()
+                ->with('error', 'حدث خطأ أثناء تعديل المنتج');
+        }
     }
 
     /**
@@ -103,7 +189,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-
+        // if ($product->section()->exists()) {
+        //     return back()->with('error', 'ليس لديك الصلاحيات لحذف المنتج');
+        // }
         $product->delete();
 
         return back()->with('success', 'تم حذف المنتج بنجاح');

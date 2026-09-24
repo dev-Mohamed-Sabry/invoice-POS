@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\section;
+use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -45,7 +45,7 @@ class SectionController extends Controller
         );
 
         try {
-            section::create([
+            Section::create([
                 'section_name' => $request->section_name,
                 'section_description' => $request->section_description ?: 'لا يوجد',
                 'created_by' => Auth::user()->name,
@@ -61,7 +61,7 @@ class SectionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(section $sections)
+    public function show(Section $sections)
     {
         //
     }
@@ -69,7 +69,7 @@ class SectionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(section $sections)
+    public function edit(Section $sections)
     {
         //
     }
@@ -87,6 +87,7 @@ class SectionController extends Controller
         $section->update([
             'section_name' => $request->section_name,
             'section_description' => $request->section_description ?: 'لا يوجد',
+
         ]);
 
         return redirect()->back()
@@ -99,10 +100,10 @@ class SectionController extends Controller
     public function destroy(Section $section)
     {
         if ($section->products()->exists()) {
-            return back()->with('error', 'لا يمكن حذف القسم لأنه مرتبط بمنتجات.');
+            return back()->with('error', 'لا يمكن حذف البنك لأنه مرتبط بخدمات.');
         }
         $section->delete();
 
-        return back()->with('success', 'تم حذف القسم بنجاح');
+        return back()->with('success', 'تم حذف البنك بنجاح');
     }
 }

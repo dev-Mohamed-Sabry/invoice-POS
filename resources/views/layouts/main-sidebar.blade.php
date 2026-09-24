@@ -272,6 +272,16 @@
 				<ul class="slide-menu">
 					<li><a class="slide-item" href="{{ url('/' . $page = 'sections') }}">الأقسام </a></li>
 					<li><a class="slide-item" href="{{ url('/' . $page = 'products') }}"> المنتجات</a></li>
+
+					@auth
+						@if (auth()->user()->usertype === 'admin')
+							<li>
+								<a class="slide-item" href="{{ url('/employees') }}">
+									الموظفون
+								</a>
+							</li>
+						@endif
+					@endauth
 					{{-- <li><a class="slide-item" href="{{ url('/' . $page = 'invoice') }}">Invoice</a></li>
 					<li><a class="slide-item" href="{{ url('/' . $page = 'pricing') }}">Pricing</a></li>
 					<li><a class="slide-item" href="{{ url('/' . $page = 'gallery') }}">Gallery</a></li>

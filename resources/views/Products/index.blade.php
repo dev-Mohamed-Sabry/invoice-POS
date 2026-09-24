@@ -9,7 +9,7 @@
     <link href="{{URL::asset('assets/plugins/datatable/css/responsive.bootstrap4.min.css')}}" rel="stylesheet" />
     <link href="{{URL::asset('assets/plugins/datatable/css/jquery.dataTables.min.css')}}" rel="stylesheet">
     <link href="{{URL::asset('assets/plugins/datatable/css/responsive.dataTables.min.css')}}" rel="stylesheet">
-    <link href="{{URL::asset('assets/plugins/select2/css/select2.min.css')}}" rel="stylesheet">
+    {{-- <link href="{{URL::asset('assets/plugins/select2/css/select2.min.css')}}" rel="stylesheet"> --}}
 @endsection
 
 @section('page-header')
@@ -82,51 +82,72 @@
                                     <th class="border-bottom-0">#</th>
                                     <th class="border-bottom-0" style="font-size: 15px;">إسم المنتج</th>
                                     <th class="border-bottom-0" style="font-size: 15px;">إسم القسم</th>
-                                    <th class="border-bottom-0 h5" style="font-size: 15px;"> الوصف</th>
-                                    <th class="border-bottom-0 h5" style="font-size: 15px;">العمليات</th>
+                                    <th class="border-bottom-0 h5" style="font-size: 15px;"> السعر</th>
+                                    <th class="border-bottom-0 h5" style="font-size: 15px;">الوصف</th>
+                                    <th class="border-bottom-0 h5" style="font-size: 15px;">الصورة</th>
+                                    <th class="border-bottom-0" style="font-size: 15px;">الإجراءات</th>
                                 </tr>
                             </thead>
 
                             <tbody>
                                 @forelse ($products as $product)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $product->product_name }}</td>
-                                        <td>{{ $product->section->section_name }}</td>
-                                        <td>{{ $product->product_description }}</td>
-                                        <td>
-                                            <div class="d-flex justify-content-center align-items-center">
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
 
-                                                {{-- Edit --}}
-                                                <a href="#" class="text-primary mx-2 edit-product" title="تعديل"
-                                                    data-id="{{ $product->id }}" data-name="{{ $product->product_name }}"
-                                                    data-product_description="{{ $product->product_description }}"
-                                                    data-section_id="{{ $product->section_id }}" data-toggle="modal"
-                                                    data-target="#modaldemo8">
+                                            <td>{{ $product->product_name }}</td>
 
-                                                    <i class="fas fa-edit fa-lg"></i>
-                                                </a>
+                                            <td>{{ $product->section->section_name }}</td>
 
-                                                {{-- Delete --}}
-                                                <form action="{{ route('products.destroy', $product) }}" method="POST"
-                                                    class="d-inline-block m-0">
-                                                    @csrf
-                                                    @method('DELETE')
+                                            <td>{{ number_format($product->product_price, 2) }}</td>
 
-                                                    <button type="submit"
-                                                        class="btn p-0 border-0 bg-transparent text-danger mx-2" title="حذف"
-                                                        onclick="return confirm('هل أنت متأكد من حذف المنتج؟')">
-                                                        <i class="fas fa-trash-alt fa-lg"></i>
-                                                    </button>
-                                                </form>
+                                    <td>
+                                        <div style="width: 250px; height:30px; overflow-y: scroll; white-space: nowrap; direction: ltr !important;">
+                                            {{ $product->product_description }}
+                                        </div>
+                                    </td>
 
-                                            </div>
-                                        </td>
+                                            <td>
+                                                @if ($product->product_image)
+                                                    <img src="{{ asset('storage/' . $product->product_image) }}" alt="{{ $product->product_name }}" width="50"
+                                                        height="50" style="object-fit: cover; border-radius: 5px;">
+                                                @else
+                                                    <span class="text-muted">لا توجد صورة</span>
+                                                @endif
+                                            </td>
 
-                                    </tr>
+                                            <td>
+                                                <div class="d-flex justify-content-center align-items-center">
+
+                                                    {{-- Edit --}}
+                                                    <a href="#" class="text-primary mx-2 edit-product" title="تعديل" data-id="{{ $product->id }}"
+                                                        data-name="{{ $product->product_name }}" data-price="{{ $product->product_price }}"
+                                                        data-product_description="{{ $product->product_description }}"
+                                                        data-section_id="{{ $product->section_id }}" data-image="{{ $product->product_image }}"
+                                                        data-toggle="modal" data-target="#modaldemo8">
+
+                                                        <i class="fas fa-edit fa-lg"></i>
+                                                    </a>
+
+                                                    {{-- Delete --}}
+                                                    <form action="{{ route('products.destroy', $product) }}" method="POST" class="d-inline-block m-0">
+
+                                                        @csrf
+                                                        @method('DELETE')
+
+                                                        <button type="submit" class="btn p-0 border-0 bg-transparent text-danger mx-2" title="حذف"
+                                                            onclick="return confirm('هل أنت متأكد من حذف المنتج؟')">
+
+                                                            <i class="fas fa-trash-alt fa-lg"></i>
+                                                        </button>
+                                                    </form>
+
+                                                </div>
+                                            </td>
+                                        </tr>
+
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="text-bold bg-danger h5">
+                                        <td colspan="7" class="text-bold bg-danger h5 text-center">
                                             لا توجد منتجات حاليا
                                         </td>
                                     </tr>
@@ -142,6 +163,7 @@
         </div>
         <!--/div-->
 
+
         <!-- Basic modal Add-->
         <div class="modal" id="modaldemo8">
             <div class="modal-dialog" role="document">
@@ -156,19 +178,22 @@
                     </div>
 
                     <div class="modal-body">
-                        <form id="productForm" action="{{ route('products.store') }}" method="POST" autocomplete="off">
+                        <form id="productForm" action="{{ route('products.store') }}" method="POST"
+                            enctype="multipart/form-data" autocomplete="off">
+
                             @csrf
 
                             <div class="form-group">
-                                <label for="product_name">إسم المنتج</label>
+                                <label for="product_name">اسم المنتج</label>
                                 <input type="text" class="form-control" id="product_name" name="product_name" required
-                                    placeholder="إدخل إسم المنتج">
+                                    placeholder="أدخل اسم المنتج">
                             </div>
 
                             <div class="form-group">
                                 <label for="section_id">القسم</label>
 
                                 <select class="form-control" id="section_id" name="section_id" required>
+
                                     <option value="">-- اختر القسم --</option>
 
                                     @foreach ($sections as $section)
@@ -176,24 +201,49 @@
                                             {{ $section->section_name }}
                                         </option>
                                     @endforeach
+
                                 </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="product_price">سعر المنتج</label>
+                                <input type="number" class="form-control" id="product_price" name="product_price" min="0"
+                                    step="0.01" required placeholder="أدخل سعر المنتج">
                             </div>
 
                             <div class="form-group">
                                 <label for="product_description">ملاحظات</label>
                                 <textarea class="form-control" id="product_description" name="product_description" rows="4"
-                                    placeholder="إدخل الملاحظات"></textarea>
+                                    placeholder="أدخل الملاحظات"></textarea>
                             </div>
 
+                            <div class="form-group">
+                                <label for="product_image">صورة المنتج</label>
+                                <input type="file" class="form-control" id="product_image" name="product_image"
+                                    accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+                                <small class="text-muted">
+                                    JPG, JPEG, PNG, WEBP - بحد أقصى 2 ميجابايت
+                                </small>
+                            </div>
+
+                             <div class="form-group">
+                                 <label>الصورة الحالية</label>
+                                 <div>
+                                     <img id="productImagePreview" src="" alt="صورة المنتج" width="100" height="100"
+                                         style="object-fit: cover; border-radius: 5px; display: none;">
+                                 </div>
+                             </div>
                             <div class="modal-footer">
-                                <button id="productSubmit" class="btn ripple btn-success" type="submit"></button>
+                                <button id="productSubmit" class="btn ripple btn-success" type="submit">
+                                </button>
+
                                 <button class="btn ripple btn-secondary" data-dismiss="modal" type="button">
                                     إغلاق
                                 </button>
                             </div>
+
                         </form>
                     </div>
-
 
                 </div>
             </div>
@@ -232,31 +282,38 @@
     <!--Internal  Datepicker js -->
     <script src="{{URL::asset('assets/plugins/jquery-ui/ui/widgets/datepicker.js')}}"></script>
     <!-- Internal Select2 js-->
-    <script src="{{URL::asset('assets/plugins/select2/js/select2.min.js')}}"></script>
+    {{-- <script src="{{URL::asset('assets/plugins/select2/js/select2.min.js')}}"></script> --}}
     <!-- Internal Modal js-->
     <script src="{{URL::asset('assets/js/modal.js')}}"></script>
 
 
     {{-- تعديل بيانات الفورم حسب الأكشن --}}
     <script>
-        // إضافة منتج جديد
-        $('.add-product').click(function () {
+    // إضافة منتج جديد
+    $('.add-product').click(function () {
 
-            $('#productModalTitle').text('إضافة منتج');
-            $('#productSubmit').text('تأكيد');
-            $('#product_name').val('');
-            $('#product_description').val('');
+        $('#productModalTitle').text('إضافة منتج');
+        $('#productSubmit').text('تأكيد');
 
-            // Delete Current Method If Existed
-            $('#productForm input[name="_method"]').remove();
+        $('#product_name').val('');
+        $('#product_price').val('');
+        $('#product_description').val('');
+        $('#section_id').val('');
 
-            $('#productForm').attr(
-                'action',
-                '{{ route('products.store') }}'
-            );
-        });
+        // تفريغ صورة المنتج
+        $('#product_image').val('');
+        $('#productImagePreview').hide().attr('src', '');
+        // Delete Current Method If Existed
+        $('#productForm input[name="_method"]').remove();
 
-        // تعديل المنتج 
+        $('#productForm').attr(
+            'action',
+            '{{ route('products.store') }}'
+        );
+    });
+
+
+    // تعديل المنتج
         $('.edit-product').click(function () {
 
             $('#productSubmit').text('تعديل');
@@ -264,13 +321,27 @@
 
             let id = $(this).data('id');
             let name = $(this).data('name');
+            let price = $(this).data('price');
             let description = $(this).data('product_description');
             let section_id = $(this).data('section_id');
+            let image = $(this).data('image');
 
             $('#product_name').val(name);
+            $('#product_price').val(price);
             $('#product_description').val(description);
             $('#section_id').val(section_id);
 
+            // تفريغ اختيار صورة جديدة
+            $('#product_image').val('');
+
+            // عرض الصورة الحالية
+            if (image) {
+                $('#productImagePreview')
+                    .attr('src', "{{ asset('storage') }}/" + image)
+                    .show();
+            } else {
+                $('#productImagePreview').hide();
+            }
 
             // Delete Current Method If Existed
             $('#productForm input[name="_method"]').remove();
@@ -279,7 +350,7 @@
 
             $('#productForm').attr('action', updateUrl);
 
-            //Laravel لا يرسل PUT مباشرة من الـ form.
+            // Laravel لا يرسل PUT مباشرة من الـ form
             $('#productForm').prepend(
                 '<input type="hidden" name="_method" value="PUT">'
             );
