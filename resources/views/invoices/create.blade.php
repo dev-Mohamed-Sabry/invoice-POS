@@ -75,8 +75,7 @@
                         <div class="row">
                             <div class="col">
                                 <label for="invoice_number" class="control-label">رقم الفاتورة</label>
-                                <input type="number" class="form-control" id="invoice_number" name="invoice_number"
-                                    title="يرجي ادخال رقم الفاتورة" required>
+                                <input type="text" class="form-control" value="سيتم توليده تلقائياً" readonly>
                             </div>
 
                             <div class="col">
@@ -96,11 +95,11 @@
                         {{-- 2 --}}
                         <div class="row">
                             <div class="col">
-                                <label for="section" class="control-label">البنك</label>
+                                <label for="section" class="control-label">القسم</label>
                                 <select id="section" name="Section" class="form-control SlectBox">
 
                                     <!--placeholder-->
-                                    <option value="" selected disabled>حدد البنك</option>
+                                    <option value="" selected disabled>حدد القسم</option>
                                     @foreach ($sections as $section)
                                         <option value="{{ $section->id }}"> {{ $section->section_name }}</option>
                                     @endforeach
@@ -108,9 +107,9 @@
                             </div>
 
                             <div class="col">
-                                <label for="product" class="control-label">الخدمة</label>
+                                <label for="product" class="control-label">المنتج</label>
                                 <select id="product" name="product" class="form-control">
-                                    <option value="" selected disabled>حدد الخدمة</option>
+                                    <option value="" selected disabled>حدد المنتج</option>
                                 </select>
                             </div>
 
@@ -154,9 +153,18 @@
                                 <label for="Value_VAT" class="control-label">قيمة ضريبة القيمة المضافة</label>
                                 <input type="number" class="form-control" id="Value_VAT" name="Value_VAT" readonly>
                             </div>
-
                             <div class="col">
-                                <label for="Total" class="control-label"> إجمالي العمولة شامل الضريبة </label>
+                                <label for="Amount_Commission" class="control-label">مستحقات البنك </label>
+
+                                <input type="number" class="form-control" id="Amount_Commission" name="Amount_Commission"
+                                    readonly>
+                            </div>
+
+
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="Total" class="control-label">(إن وجدت) إجمالي العمولة شامل الضريبة </label>
                                 <input type="number" class="form-control" id="Total" name="Total" readonly>
                             </div>
                         </div>
@@ -167,13 +175,9 @@
                                 <label for="exampleTextarea">ملاحظات</label>
                                 <textarea class="form-control" id="exampleTextarea" name="note" rows="3"></textarea>
                             </div>
-                        </div><br>
-                        <div class="col">
-                            <label for="Amount_Commission" class="control-label">مبلغ العمولة</label>
-
-                            <input type="number" class="form-control" id="Amount_Commission" name="Amount_Commission"
-                                readonly>
                         </div>
+                        <br>
+
                         <p class="text-danger">* صيغة المرفق pdf, jpeg ,.jpg , png </p>
                         <h5 class="card-title">المرفقات</h5>
 
@@ -193,12 +197,12 @@
         </div>
     </div>
 
-    </div>
+    {{-- </div> --}}
 
     <!-- row closed -->
-    </div>
+    {{-- </div> --}}
     <!-- Container closed -->
-    </div>
+    {{-- </div> --}}
     <!-- main-content closed -->
 @endsection
 
@@ -242,16 +246,16 @@
             let sectionId = $(this).val();
             let product = $('#product');
 
-            product.html('<option selected disabled>جاري تحميل الخدمات...</option>');
+            product.html('<option selected disabled>جاري تحميل المنتجات...</option>');
 
             if (!sectionId) return;
 
             $.get("{{ url('invoices/products') }}/" + sectionId, function (products) {
 
-                product.html('<option selected disabled>حدد الخدمة</option>');
+                product.html('<option selected disabled>حدد المنتج</option>');
 
                 if (!products.length) {
-                    product.append('<option disabled>لا توجد خدمات لهذا البنك</option>');
+                    product.append('<option disabled>لا توجد منتجات لهذا القسم</option>');
                     return;
                 }
 
@@ -267,7 +271,7 @@
             }).fail(function () {
 
                 product.html(
-                    '<option selected disabled>حدث خطأ أثناء تحميل الخدمات</option>'
+                    '<option selected disabled>حدث خطأ أثناء تحميل المنتجات</option>'
                 );
 
             });

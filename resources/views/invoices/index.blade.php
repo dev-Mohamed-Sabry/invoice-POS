@@ -45,46 +45,65 @@
 								فاتورة</a>
 						</div>
 					</div>
-					</thead>
+
 				</div>
 				<div class="card-body">
 					<div class="table-responsive">
 						<table id="example" class="table key-buttons text-nowrap w-100 text-center">
 							<thead>
+
 								<tr>
 									<th class="border-bottom-0">#</th>
 									<th class="border-bottom-0">رقم الفاتورة</th>
 									<th class="border-bottom-0">تاريخ الفاتورة</th>
-									<th class="border-bottom-0">تاريخ الإستحقاق</th>
+									<th class="border-bottom-0">تاريخ الاستحقاق</th>
 									<th class="border-bottom-0">المنتج</th>
 									<th class="border-bottom-0">القسم</th>
-									<th class="border-bottom-0">الخصم</th>
-									<th class="border-bottom-0">نسبة الضريبة</th>
+									<th class="border-bottom-0">نسبة العمولة </th>
+									<th class="border-bottom-0">ضريبة القيمة المضافة</th>
 									<th class="border-bottom-0">قيمة الضريبة</th>
-									<th class="border-bottom-0">الإجمالي</th>
-									<th class="border-bottom-0">الحالة</th>
+									<th class="border-bottom-0"> المدفوع</th>
+									<th class="border-bottom-0">إجمالي مبلغ العمولة</th>
 									<th class="border-bottom-0">ملاحظات</th>
 								</tr>
+
+
 							</thead>
 							<tbody>
 
-								<tr>
-									{{-- <th scope="row">
-										{{ $loop->iteration }}
-									</th> --}}
-									<td>1</td>
-									<td>145236</td>
-									<td>14-9-2026</td>
-									<td>20-9-2026</td>
-									<td>الأطيب سكر أبيض</td>
-									<td>بقالة</td>
-									<td>10%</td>
-									<td>0%</td>
-									<td>0%</td>
-									<td>25</td>
-									<td>غير مدفوعة</td>
-									<td>ساري حتى 2028</td>
-								</tr>
+								@forelse ($invoices as $invoice)
+									<tr>
+										<td>{{ $loop->iteration }}</td>
+
+										<td>{{ $invoice->invoice_number }}</td>
+
+										<td>{{ \Carbon\Carbon::parse($invoice->invoice_date)->format('d-m-Y') }}</td>
+
+										<td>{{ \Carbon\Carbon::parse($invoice->due_date)->format('d-m-Y') }}</td>
+
+										<td>{{ $invoice->product->product_name }}</td>
+
+										<td>{{ $invoice->section->section_name }}</td>
+
+										<td>{{ $invoice->commission_rate }}%</td>
+
+										<td>{{ $invoice->rate_vat }}%</td>
+
+										<td>{{ $invoice->value_vat }}</td>
+
+										<td>{{ $invoice->amount_collection }}</td>
+
+										<td>{{ $invoice->amount_commission }}</td>
+
+										<td>{{ $invoice->note ?? 'لا توجد ملاحظات' }}</td>
+									</tr>
+								@empty
+									<tr>
+										<td colspan="12" class="text-center">
+											لا توجد فواتير مسجلة
+										</td>
+									</tr>
+								@endforelse
 
 							</tbody>
 						</table>

@@ -13,9 +13,20 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+
             $table->string('product_name');
+
+            $table->decimal('product_price', 12, 2);
+
             $table->text('product_description')->nullable();
-            $table->foreignId('section_id')->constrained()->restrictOnDelete();
+
+            $table->string('product_image')->nullable();
+
+            $table->foreignId('section_id')
+                ->constrained()
+                ->restrictOnDelete();
+
+            $table->string('created_by');
             $table->timestamps();
         });
     }

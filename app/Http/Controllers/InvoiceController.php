@@ -6,7 +6,6 @@ use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Section;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
 {
@@ -15,7 +14,8 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        return view('invoices.index');
+        $invoices = Invoice::all();
+        return view('invoices.index', compact('invoices'));
     }
 
     /**
@@ -35,7 +35,6 @@ class InvoiceController extends Controller
     {
         $request->validate(
             [
-                'invoice_number' => ['required', 'unique:invoices,invoice_number'],
                 'invoice_Date' => ['required', 'date'],
                 'Due_date' => ['required', 'date', 'after_or_equal:invoice_Date'],
 
@@ -50,18 +49,15 @@ class InvoiceController extends Controller
                 'image' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png,webp', 'max:2048'],
             ],
             [
-                'invoice_number.required' => 'رقم الفاتورة مطلوب.',
-                'invoice_number.unique' => 'رقم الفاتورة موجود بالفعل.',
-
                 'invoice_Date.required' => 'تاريخ الفاتورة مطلوب.',
                 'Due_date.required' => 'تاريخ الاستحقاق مطلوب.',
                 'Due_date.after_or_equal' => 'تاريخ الاستحقاق يجب أن يكون بعد أو يساوي تاريخ الفاتورة.',
 
-                'Section.required' => 'يجب اختيار البنك.',
-                'Section.exists' => 'البنك المحدد غير موجود.',
+                'Section.required' => 'يجب اختيار القسم.',
+                'Section.exists' => 'القسم المحدد غير موجود.',
 
-                'product.required' => 'يجب اختيار الخدمة.',
-                'product.exists' => 'الخدمة المحددة غير موجودة.',
+                'product.required' => 'يجب اختيار المنتج.',
+                'product.exists' => 'المنتج المحدد غير موجود.',
 
                 'Amount_collection.required' => 'مبلغ التحصيل مطلوب.',
                 'Amount_collection.numeric' => 'مبلغ التحصيل يجب أن يكون رقمًا.',
@@ -98,9 +94,25 @@ class InvoiceController extends Controller
             // إجمالي العمولة شامل الضريبة
             $total = $amountCommission;
 
+            //توليد رقم الفاتورة
+            $lastInvoice = Invoice::latest('id')->first();
+
+            if ($lastInvoice) {
+                $lastNumber = (int) substr($lastInvoice->invoice_number, -6);
+                $nextNumber = $lastNumber + 1;
+            } else {
+                $nextNumber = 1;
+            }
+
+            $invoiceNumber =
+                'INV-' .
+                date('Y') .
+                '-' .
+                str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+
             $invoice = new Invoice();
 
-            $invoice->invoice_number = $request->invoice_number;
+            $invoice->invoice_number = $invoiceNumber;
             $invoice->invoice_date = $request->invoice_Date;
             $invoice->due_date = $request->Due_date;
 
@@ -135,7 +147,7 @@ class InvoiceController extends Controller
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('error', $e->getMessage());
+                ->with('error', 'حدث خطأ ما أثناء إضافة الفاتورة');
         }
     }
 
