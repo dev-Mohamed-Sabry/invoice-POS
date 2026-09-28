@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
@@ -30,9 +31,16 @@ Route::middleware([
 
     Route::get('invoices/products/{section}', [InvoiceController::class, 'getProductsBySection'])
         ->name('products.by-section');
-    Route::resource('invoices', InvoiceController::class);
-    Route::resource('products', ProductController::class);
+
+    Route::resource('customers', CustomerController::class)
+        ->except(['destroy']);
+    Route::delete('customers/{customer}', [CustomerController::class, 'destroy'])
+        ->middleware('admin')
+        ->name('customers.destroy');
+
     Route::resource('sections', SectionController::class);
+    Route::resource('products', ProductController::class);
+    Route::resource('invoices', InvoiceController::class);
 
 
 

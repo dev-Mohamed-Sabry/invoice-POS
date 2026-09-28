@@ -71,8 +71,9 @@ class EmployeeController extends Controller
     {
         //
     }
-    public function destroy()
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return back()->with('success', 'تم حذف الموظف بنجاح');
     }
 }

@@ -131,18 +131,33 @@
                                         </td>
 
                                         <td>
-                                            <div class="d-flex justify-content-center">
+                                            {{-- عرض --}}
+                                            <a href="{{ route('employees.show', $employee->id) }}" class="btn btn-sm btn-info"
+                                                title="عرض بيانات العميل">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
 
-                                                <a href="#" class="text-primary mx-2" title="تعديل">
-                                                    <i class="fas fa-edit fa-lg"></i>
-                                                </a>
+                                            {{-- تعديل --}}
+                                            <a href="{{ route('employees.edit', $employee->id) }}"
+                                                class="btn btn-sm btn-primary" title="تعديل العميل">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
 
-                                                <a href="#" class="text-danger mx-2" title="تعطيل">
-                                                    <i class="fas fa-user-slash fa-lg"></i>
-                                                </a>
+                                            {{-- حذف --}}
+                                            @if (auth()->user()->usertype === 'admin')
+                                                <form action="{{ route('employees.destroy', $employee->id) }}" method="POST"
+                                                    class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
 
-                                            </div>
+                                                    <button type="submit" class="btn btn-sm btn-danger" title="حذف الموظف"
+                                                        onclick="return confirm('هل أنت متأكد من حذف الموظف')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </td>
+
 
                                     </tr>
                                 @empty

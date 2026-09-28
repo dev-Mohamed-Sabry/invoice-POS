@@ -280,6 +280,11 @@
 									الموظفون
 								</a>
 							</li>
+							<li>
+								<a class="slide-item" href="{{ url('/customers') }}">
+									العملاء
+								</a>
+							</li>
 						@endif
 					@endauth
 					{{-- <li><a class="slide-item" href="{{ url('/' . $page = 'invoice') }}">Invoice</a></li>
