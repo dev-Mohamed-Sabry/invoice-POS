@@ -21,13 +21,6 @@ class CustomerController extends Controller
         return view('customers.create');
     }
 
-    public function show(Customer $customer)
-    {
-
-        return view('customers.show', compact('customer'));
-    }
-
-
     public function store(Request $request)
     {
         $request->validate([
@@ -96,6 +89,18 @@ class CustomerController extends Controller
                 ->withInput()
                 ->with('error', 'حدث خطأ أثناء إضافة العميل: ' . $e->getMessage());
         }
+    }
+
+    public function show(Customer $customer)
+    {
+
+        return view('customers.show', compact('customer'));
+    }
+
+    public function edit(Customer $customer)
+    {
+
+        return view('customers.edit', compact('customer'));
     }
 
     public function update(Request $request, Customer $customer)
