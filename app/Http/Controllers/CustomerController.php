@@ -75,7 +75,7 @@ class CustomerController extends Controller
                 'emergency_contact_relation'    => $request->emergency_contact_relation,
                 'additional_data'               => $request->additional_data,
                 'notes'                         => $request->notes,
-                'is_active'                     => $request->has('is_active'),
+                'is_active'                     => $request->is_active,
                 'created_by'                    => Auth::user()->name,
             ]);
 
@@ -174,7 +174,7 @@ class CustomerController extends Controller
             $customer->emergency_contact_relation = $request->emergency_contact_relation;
             $customer->additional_data            = $request->additional_data;
             $customer->notes                      = $request->notes;
-            $customer->is_active                  = $request->has('is_active');
+            $customer->is_active                  = $request->is_active;
 
             $customer->save();
 

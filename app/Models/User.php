@@ -33,8 +33,10 @@ class User extends Authenticatable
         'password',
         'phone',
         'job_title',
-        'attachment',
+        'attachment_front',
+        'attachment_back',
         'is_active',
+        'created_by',
         'usertype',
     ];
 

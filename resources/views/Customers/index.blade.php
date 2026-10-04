@@ -126,7 +126,9 @@
 											@endif
 										</td>
 
-										<td>{{ $customer->created_by }}</td>
+										@if (auth()->user()->usertype === 'admin')
+											<td>{{ $customer->created_by }}</td>
+										@endif
 
 										<td>{{ $customer->notes ?? 'لا توجد ملاحظات' }}</td>
 

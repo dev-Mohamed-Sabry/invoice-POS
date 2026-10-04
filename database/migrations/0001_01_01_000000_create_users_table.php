@@ -19,12 +19,17 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone')->nullable();
             $table->string('job_title')->nullable();
-            $table->string('attachment')->nullable();
+
+            $table->string('attachment_front')->nullable();
+            $table->string('attachment_back')->nullable();
+
             $table->boolean('is_active')->default(true);
             $table->string('usertype')->default('employee');
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
+
+            $table->string('created_by')->nullable();
             $table->timestamps();
         });
 

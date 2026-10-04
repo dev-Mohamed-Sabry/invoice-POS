@@ -91,6 +91,7 @@
                                     <th>المسمى الوظيفي</th>
                                     <th>نوع المستخدم</th>
                                     <th>الحالة</th>
+                                    <th>أضيف بواسطة</th>
                                     <th>تاريخ الإنشاء</th>
                                     <th>الإجراءات</th>
                                 </tr>
@@ -125,6 +126,10 @@
                                                 </span>
                                             @endif
                                         </td>
+
+                                        @if (auth()->user()->usertype === 'admin')
+                                            <td>{{ $employee->created_by }}</td>
+                                        @endif
 
                                         <td>
                                             {{ $employee->created_at->format('d-m-Y') }}

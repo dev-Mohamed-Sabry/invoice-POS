@@ -113,13 +113,29 @@
                             </div>
 
                             <div class="col">
-                                <label for="attachment" class="control-label">بطاقة الموظف</label>
-                                <input type="file" class="form-control" id="attachment" name="attachment"
-                                    accept="image/*,.pdf">
-                                <small class="text-muted">
-                                    صورة البطاقة أو ملف PDF
-                                </small>
+                                <label for="attachment_front" class="control-label">
+                                    صورة وجه البطاقة
+                                </label>
 
+                                <input type="file" class="form-control" id="attachment_front" name="attachment_front"
+                                    accept="image/jpeg,image/png,image/webp">
+
+                                <small class="text-muted">
+                                    صورة وجه بطاقة الموظف
+                                </small>
+                            </div>
+
+                            <div class="col">
+                                <label for="attachment_back" class="control-label">
+                                    صورة ظهر البطاقة
+                                </label>
+
+                                <input type="file" class="form-control" id="attachment_back" name="attachment_back"
+                                    accept="image/jpeg,image/png,image/webp">
+
+                                <small class="text-muted">
+                                    صورة ظهر بطاقة الموظف
+                                </small>
                             </div>
                         </div>
 
