@@ -138,13 +138,13 @@
                                         <td>
                                             {{-- عرض --}}
                                             <a href="{{ route('employees.show', $employee->id) }}" class="btn btn-sm btn-info"
-                                                title="عرض بيانات العميل">
+                                                title="عرض بيانات الموظف">
                                                 <i class="fas fa-eye"></i>
                                             </a>
 
                                             {{-- تعديل --}}
                                             <a href="{{ route('employees.edit', $employee->id) }}"
-                                                class="btn btn-sm btn-primary" title="تعديل العميل">
+                                                class="btn btn-sm btn-primary" title="تعديل الموظف">
                                                 <i class="fas fa-edit"></i>
                                             </a>
 

@@ -14,9 +14,13 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
 
-            $table->string('product_name');
+            $table->string('product_name')->unique();
 
             $table->decimal('product_price', 12, 2);
+
+            // VAT الافتراضي للمنتج
+            $table->boolean('is_vat_applicable')->default(false);
+            $table->decimal('vat_rate', 5, 2)->default(0);
 
             $table->text('product_description')->nullable();
 
@@ -27,6 +31,7 @@ return new class extends Migration
                 ->restrictOnDelete();
 
             $table->string('created_by');
+
             $table->timestamps();
         });
     }

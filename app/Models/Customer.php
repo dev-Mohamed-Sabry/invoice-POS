@@ -26,11 +26,17 @@ class Customer extends Model
         'created_by',
     ];
 
-    protected function casts(): array
+    protected function casts()
     {
         return [
             'date_of_birth' => 'date',
             'is_active' => 'boolean',
         ];
+    }
+
+
+    public function contracts()
+    {
+        return $this->hasMany(Contract::class);
     }
 }
