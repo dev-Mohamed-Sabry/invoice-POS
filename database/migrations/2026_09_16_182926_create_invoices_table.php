@@ -36,6 +36,7 @@ return new class extends Migration
             $table->decimal('value_vat', 12, 2)->default(0);
             $table->decimal('total', 12, 2)->default(0);
 
+            $table->string('created_by');
             $table->text('note')->nullable();
             $table->string('image')->nullable();
 

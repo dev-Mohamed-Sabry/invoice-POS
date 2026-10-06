@@ -1,0 +1,63 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('contract_items', function (Blueprint $table) {
+            $table->id();
+
+            $table->foreignId('contract_id')
+                ->constrained('contracts')
+                ->restrictOnDelete();
+
+            $table->foreignId('product_id')
+                ->constrained('products')
+                ->restrictOnDelete();
+
+            // Snapshot لبيانات المنتج وقت إنشاء العقد
+            $table->string('product_name');
+
+            // المنتجات تباع كوحدات صحيحة
+            $table->unsignedInteger('quantity')->default(1);
+
+            // السعر النقدي
+            $table->decimal('cash_product_price', 12, 2);
+            $table->decimal('cash_total', 12, 2);
+
+            // فائدة القسط
+            $table->decimal('interest_rate', 5, 2)->default(0);
+            $table->decimal('interest_amount', 12, 2)->default(0);
+
+            // المصاريف الإدارية
+            $table->decimal('administrative_fees', 12, 2)->default(0);
+
+            // VAT
+            $table->boolean('apply_vat')->default(false);
+            $table->decimal('vat_rate', 5, 2)->default(0);
+            $table->decimal('vat_amount', 12, 2)->default(0);
+
+            // التقسيط
+            $table->decimal('installment_total', 12, 2)->default(0);
+            $table->decimal('monthly_installment', 12, 2)->default(0);
+            $table->unsignedInteger('installment_months')->default(0);
+
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('contract_items');
+    }
+};
