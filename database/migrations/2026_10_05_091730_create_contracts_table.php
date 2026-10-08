@@ -21,12 +21,14 @@ return new class extends Migration
                 ->constrained('customers')
                 ->restrictOnDelete();
 
-            $table->foreignId('employee_id')
+            $table->foreignId('user_id')
                 ->constrained('users')
                 ->restrictOnDelete();
 
             $table->enum('sale_type', ['cash', 'installment']);
             $table->date('contract_date');
+
+            $table->unsignedInteger('contract_months')->default(0);
 
             // العمولة
             $table->decimal('commission_rate', 5, 2)->default(0);

@@ -25,28 +25,22 @@ return new class extends Migration
             // Snapshot لبيانات المنتج وقت إنشاء العقد
             $table->string('product_name');
 
-            // المنتجات تباع كوحدات صحيحة
+            // المنتجات تباع بوحدات صحيحة
             $table->unsignedInteger('quantity')->default(1);
 
-            // السعر النقدي
+            // السعر النقدي النهائي للمنتج (شامل VAT إذا كان خاضعًا)
             $table->decimal('cash_product_price', 12, 2);
             $table->decimal('cash_total', 12, 2);
 
-            // فائدة القسط
+            // فائدة التقسيط
             $table->decimal('interest_rate', 5, 2)->default(0);
             $table->decimal('interest_amount', 12, 2)->default(0);
 
             // المصاريف الإدارية
             $table->decimal('administrative_fees', 12, 2)->default(0);
 
-            // VAT
-            $table->boolean('apply_vat')->default(false);
-            $table->decimal('vat_rate', 5, 2)->default(0);
-            $table->decimal('vat_amount', 12, 2)->default(0);
-
-            // التقسيط
+            // إجمالي التقسيط
             $table->decimal('installment_total', 12, 2)->default(0);
-            $table->decimal('monthly_installment', 12, 2)->default(0);
             $table->unsignedInteger('installment_months')->default(0);
 
             $table->timestamps();
