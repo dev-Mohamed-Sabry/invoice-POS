@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
+
+
 class CustomerController extends Controller
 {
     public function index()
@@ -28,7 +30,7 @@ class CustomerController extends Controller
             'phone'                      => 'required|string|max:20',
             'secondary_phone'            => 'nullable|string|max:20',
 
-            'national_id'                => 'required|string|max:20|unique:customers,national_id',
+            'national_id' => 'required|digits:14|unique:customers,national_id',
             'national_id_front'          => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'national_id_back'           => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
 
@@ -103,7 +105,7 @@ class CustomerController extends Controller
         return view('customers.edit', compact('customer'));
     }
 
-    public function update(Request $request, Customer $customer)
+    public function update(Request $request, Customer   $customer)
     {
         $request->validate([
             'name'                       => 'required|string|max:255',
@@ -174,7 +176,7 @@ class CustomerController extends Controller
             $customer->emergency_contact_relation = $request->emergency_contact_relation;
             $customer->additional_data            = $request->additional_data;
             $customer->notes                      = $request->notes;
-            $customer->is_active                  = $request->is_active;
+            $customer->is_active                  =  $request->is_active;
 
             $customer->save();
 
@@ -190,7 +192,7 @@ class CustomerController extends Controller
         }
     }
 
-    public function destroy(Customer $customer)
+    public function destroy(Customer   $customer)
     {
         $customer->delete();
         return back()->with('success', 'تم حذف العميل بنجاح');

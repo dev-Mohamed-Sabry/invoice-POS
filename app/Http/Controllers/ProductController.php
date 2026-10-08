@@ -196,4 +196,15 @@ class ProductController extends Controller
 
         return back()->with('success', 'تم حذف المنتج بنجاح');
     }
+
+
+    public function getProductsBySection(Section $section)
+    {
+        return response()->json(
+            $section->products()
+                ->select('id', 'product_name', 'product_price')
+                ->orderBy('product_name')
+                ->get()
+        );
+    }
 }

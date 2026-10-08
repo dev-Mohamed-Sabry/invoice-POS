@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ContractController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\InvoiceController;
@@ -29,8 +30,7 @@ Route::middleware([
     })->name('dashboard');
 
 
-    Route::get('invoices/products/{section}', [InvoiceController::class, 'getProductsBySection'])
-        ->name('products.by-section');
+
 
     Route::resource('customers', CustomerController::class)
         ->except(['destroy']);
@@ -39,7 +39,18 @@ Route::middleware([
         ->name('customers.destroy');
 
     Route::resource('sections', SectionController::class);
+    Route::get('products/by-section/{section}', [ProductController::class, 'getProductsBySection'])
+        ->name('products.by-section');
     Route::resource('products', ProductController::class);
+
+
+    Route::get('contracts/search-customers', [ContractController::class, 'searchCustomers'])
+        ->name('contracts.search-customers');
+
+    Route::get('contracts/search-users', [ContractController::class, 'searchUsers'])
+        ->name('contracts.search-users');
+    Route::resource('contracts', ContractController::class);
+
     Route::resource('invoices', InvoiceController::class);
 
 
